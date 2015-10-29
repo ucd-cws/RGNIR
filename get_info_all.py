@@ -14,7 +14,7 @@ for pic in glob.glob("*.JPG"):  # TODO change ending to img file type
 	print(pic)
 	path = os.path.join(dir, pic)
 
-	band_stats = rgnir_info.main(path)
+	band_stats = rgnir_info.get_band_stats(path)
 	results.append([pic] + band_stats[0])
 	results.append([pic] + band_stats[1])
 	results.append([pic] + band_stats[2])

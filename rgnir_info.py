@@ -8,7 +8,7 @@ if version_num < 1100000:
 	sys.exit('ERROR: Python bindings of GDAL 1.10 or later required')
 
 
-def main(img):
+def get_band_stats(img):
 	""" Get stats (Min, Max, Mean, StdDev) for each band"""
 	# open dataset
 	image = gdal.Open(img)
@@ -38,7 +38,7 @@ if __name__ == '__main__':
 		"""
 		[ ERROR ] you must supply the image you want to calc band stats
 		"""
-	main(sys.argv[1])
+	get_band_stats(sys.argv[1])
 
 
 
