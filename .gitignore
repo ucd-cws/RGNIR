@@ -1,3 +1,5 @@
 *.aux.xml
 *.pyc
 .idea/
+*.JPG
+*.tif

@@ -1,7 +1,11 @@
 import sys
 import os
 import gdal
+import numpy
 from numpy import *
+
+# ignore error when denominator is zero
+numpy.seterr(divide='ignore', invalid='ignore')
 
 # check if python gdal bindings are installed
 version_num = int(gdal.VersionInfo('VERSION_NUM'))
