@@ -20,3 +20,10 @@ if images are something other than JPGs.
 4. GDAL GetStatistics will return the band statistics (min, max, mean, standard deviation) for 
 each band as well as NDVI and NDWI.
 5. Open CSV file with the results.
+
+
+## Bands
+
+Band 1: Red
+Band 2: Green
+Band 3: Near Infrared
