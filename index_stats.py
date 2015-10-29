@@ -2,6 +2,7 @@ import sys
 import os
 import gdal
 import numpy
+
 from numpy import *
 
 # ignore error when denominator is zero
@@ -27,12 +28,17 @@ def ndvi(img):
 
 	band1 = array(band1, dtype=float)  # change the array data type from integer to float to allow decimals
 	band3 = array(band3, dtype=float)
+	
+	
 
 	# calculate ndvi
 	# NDVI = (nearInfrared - Red) / (nearInfrared + Red)
 	var1 = subtract(band3, band1)
 	var2 = add(band3, band1)
 	ndvi_result = divide(var1, var2)
+	
+	#check = numpy.logical_and ( band1 > 1, band3 > 1 )
+	#ndvi_result = numpy.where ( check,  (band3 - band1 ) / ( band3 + band1 ), -999 ) 
 
 	# https://gist.github.com/arnaldorusso/100b58b8c23d8398fe9d
 	shape = band1.shape  # get the image dimensions - format (row, col)
@@ -41,8 +47,21 @@ def ndvi(img):
 																					# and rows, num bands, output datatype
 
 	dst_ds.GetRasterBand(1).WriteArray(ndvi_result)  # write numpy array band1 as the first band of the multiTiff
-	stat = dst_ds.GetRasterBand(1).GetStatistics(1, 1)  # get the band statistics (min, max, mean, standard deviation)
+	
+	# try to set projection if input has it
+	try: 
+		geo = image.GetGeoTransform()  # get the datum
+		proj = image.GetProjection()   # get the projection
+	
+		dst_ds.SetGeoTransform( geo ) # set the datum
+		dst_ds.SetProjection( proj )  # set the projection
+	except:
+		print("Unable to set datum/projection")
 
+	stat = dst_ds.GetRasterBand(1).GetStatistics(0, 1)  # get the band statistics (min, max, mean, standard deviation)
+
+	dst_ds.GetRasterBand(1).SetStatistics(stat[0], stat[1], stat[2], stat[3]) # set the stats we just got to the band
+	
 	# close dataset
 	image = None
 
@@ -76,8 +95,20 @@ def ndwi(img):
 	dst_ds = driver.Create(os.path.join("NDWI", (name + "_NDWI.tif")), shape[1], shape[0], 1, gdal.GDT_Float32)    # destination filename, number of columns
 																					# and rows, num bands, output datatype
 
+	
+		# try to set projection if input has it
+	try: 
+		geo = image.GetGeoTransform()  # get the datum
+		proj = image.GetProjection()   # get the projection
+	
+		dst_ds.SetGeoTransform( geo ) # set the datum
+		dst_ds.SetProjection( proj )  # set the projection
+		
+	except:
+		print("Unable to set datum/projection")
+	
 	dst_ds.GetRasterBand(1).WriteArray(ndwi_result)  # write numpy array band1 as the first band of the multiTiff
-	stat = dst_ds.GetRasterBand(1).GetStatistics(1, 1)  # get the band statistics (min, max, mean, standard deviation)
+	stat = dst_ds.GetRasterBand(1).GetStatistics(0, 1)  # get the band statistics (min, max, mean, standard deviation)
 
 	# close dataset
 	image = None
