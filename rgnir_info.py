@@ -21,7 +21,7 @@ def get_band_stats(img):
 
 	# loop through the bands and get band stats
 	for i in range(1, num_bands + 1):
-		print "Band: %s" % i
+		#print "Band: %s" % i
 		stats = image.GetRasterBand(i).GetStatistics(0,1)  # min, max, mean, stddev
 		band_stats.append([i] + stats) # add band id to stats list
 
